@@ -1,0 +1,19 @@
+Sprites:
+    - Paddles (only needs to be static, rotation can take care of animation)
+    - Bumpers (round. Probably only needs to be static, as srinking and expanding would probably be convincing enough)
+    - Slingshots (the triangle-like bumpers. Same as bumpers regarding animation, animation may not even be necessary)
+    - Plunger (Might need a few frames for compression and release, but depending on the sprite, we might be able to get creative)
+    - Holes (as in, bits of the table that hold the ball for a bit before shooting it out. Don't need frames of it holding the ball or whatever, that can be handled in-engine)
+    - Table background (Can either be fairly generic so that wherever the elements are placed, it won't cause a problem, or it'll have to be done after the board layout is set)
+    - Game background (visible from the sides of the table, as the table won't occupy the width of the screen)
+
+Sound FX:
+    - Ball hitting bumpers
+    - Ball hitting slingshots
+    - Ball hitting paddles
+    - Ball hitting table walls (maybe)
+    - Paddles activating (as in, something like the analogue sound you get when you hit the paddle buttons on a real machine)
+    - Ball drain sound/tune (as in, sound for when you've lost a ball)
+    - Game over sound/tune
+    - Extra ball get sound/tune
+    - Various sounds for scoring
