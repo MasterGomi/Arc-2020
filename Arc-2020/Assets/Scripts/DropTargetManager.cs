@@ -9,14 +9,21 @@ public class DropTargetManager : MonoBehaviour
     /// </summary>
     private DropTargetComponent[] dropTargets;
 
+    /// <summary>
+    /// The score which is added when all drop targets are knocked down.
+    /// </summary>
+    [SerializeField] int bonusScoreValue;
 
-    // Start is called before the first frame update
     void Start()
     {
-        dropTargets = GetComponentsInChildren<DropTargetComponent>();    
+        dropTargets = GetComponentsInChildren<DropTargetComponent>();
+        TableManager.Manager.RegisterScores(this, bonusScoreValue);
     }
 
-    public void CheckForDroppedTargets()
+    /// <summary>
+    /// Checks to see if all targets have been dropped. 
+    /// </summary>
+    public void CheckForActiveTargets()
     {
         //Check for all target components to see if they are active.
         foreach(DropTargetComponent targetComponent in dropTargets)
@@ -32,5 +39,7 @@ public class DropTargetManager : MonoBehaviour
         {
             targetComponent.ResetTarget();
         }
+
+        TableManager.Manager.Score(this);
     }
 }
