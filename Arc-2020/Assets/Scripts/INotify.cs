@@ -15,4 +15,6 @@ public enum EventNotify
     EndOfBall,
     NewBall,
     GameOver,
+    GateDown,
+    GateUp,
 }
