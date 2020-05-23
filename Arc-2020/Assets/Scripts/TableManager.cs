@@ -41,7 +41,7 @@ public class TableManager : MonoBehaviour
         // Ensure there is only one TableManager for the game
         if (Manager != null) { Destroy(gameObject); return; }
         Manager = this;
-        BallsRemaining = StartingBalls;
+        BallsRemaining = StartingBalls - 1; // -1 becuase the first ball is automatically dispensed
     }
 
 
@@ -82,8 +82,8 @@ public class TableManager : MonoBehaviour
         // Activate relevant lights
         // Show relevant information
         // Start new ball
+        // Include stall for appropriate amount of time (especially to let sounds play out)
 
-        throw new System.NotImplementedException();
     }
 
     private void GameOver()

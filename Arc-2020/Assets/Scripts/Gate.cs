@@ -22,6 +22,10 @@ public class Gate : MonoBehaviour, INotify
     /// When the gate is informed to raise, how long should it wait. (To let the ball escape)
     /// </summary>
     public float UpDelay;
+    /// <summary>
+    /// Dictates whether or not the gate resets to default position on a new ball
+    /// </summary>
+    public bool ResetOnNew = true;
 
     private bool _positionDown = false;
     private MeshRenderer _render;
@@ -37,6 +41,8 @@ public class Gate : MonoBehaviour, INotify
         _collider = GetComponent<MeshCollider>();
         // Lower the gate if that is its default position
         if (!DefaultUp) Lower();
+        // Subscribe to TableManager
+        TableManager.Manager.Subscribe(this);
         // Subscribe to the controllers, if possible
         foreach(GameObject obj in Controllers)
         {
@@ -63,6 +69,7 @@ public class Gate : MonoBehaviour, INotify
                 if (_positionDown) StartCoroutine(RaiseAfter(UpDelay));
                 break;
             case EventNotify.NewBall:
+                if (!ResetOnNew) return;
                 if (DefaultUp && _positionDown) Raise();
                 else if (!DefaultUp && !_positionDown) Lower();
                 break;
