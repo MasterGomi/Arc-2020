@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Kickout : MonoBehaviour
+public class Kickout : MonoBehaviour, IController
 {
     /// <summary>
     /// Amount of time the ball is held in place for (in seconds)
@@ -29,6 +29,10 @@ public class Kickout : MonoBehaviour
     /// How far inside the hole to hold the ball
     /// </summary>
     public float Depth;
+    /// <summary>
+    /// How many points to award when the ball is caught
+    /// </summary>
+    public int Score;
 
     private Transform _thisTransform;
     private Transform _ballTransform;
@@ -36,12 +40,14 @@ public class Kickout : MonoBehaviour
     private bool _waiting = false;
     private float _waitTimer;
 
+    private List<INotify> _subscribers = new List<INotify>();
+
     private void Start()
     {
         FiringDirection.Normalize();
-        Debug.Log(FiringDirection);
         _thisTransform = GetComponent<Transform>();
         _waitTimer = HoldTime;
+        TableManager.Manager.RegisterScores(this, Score);
     }
 
     private void Update()
@@ -81,6 +87,11 @@ public class Kickout : MonoBehaviour
         _ballPhys.constraints = RigidbodyConstraints.FreezeAll;
         // Wait to fire
         _waiting = true;
+
+        // Notify subscriber (a kickback gate) to lower the gate
+        Notify(EventNotify.GateDown);
+        // Score points
+        TableManager.Manager.Score(this);
     }
 
     private void FireBall()
@@ -107,5 +118,23 @@ public class Kickout : MonoBehaviour
         // Note: Freezing position on the Z-axis is the default state for the ball, so it doesn't move in ways we don't expect
         _ballPhys.constraints = RigidbodyConstraints.FreezePositionZ;
         _ballPhys.AddForce(firingForce, ForceMode.Impulse);
+    }
+
+    public void Subscribe(INotify subscriber)
+    {
+        _subscribers.Add(subscriber);
+    }
+
+    public void Unsubscribe(INotify subscriber)
+    {
+        _subscribers.Remove(subscriber);
+    }
+
+    private void Notify(EventNotify notify)
+    {
+        foreach(INotify obj in _subscribers)
+        {
+            obj.Notify(notify);
+        }
     }
 }

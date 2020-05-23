@@ -14,9 +14,9 @@ public class Plunger : MonoBehaviour, IController, INotify
     private Transform _trans;
     private Rigidbody _rigid;
     private bool _wasDown = false;
-    private float _traveled = 0;
     private RigidbodyConstraints _prevConstraints;
-    private Vector3 _previousAnchor;
+    private float _startingY;
+    private float _bottomY;
 
     public float DownDist;
     public float DistStep;
@@ -35,8 +35,10 @@ public class Plunger : MonoBehaviour, IController, INotify
         Destroy(curSpring);
         _trans = gameObject.transform;
         _rigid = GetComponent<Rigidbody>();
-        _prevConstraints = _rigid.constraints;
+        _prevConstraints = _rigid.constraints; // Should be freeze X and Z movement and all rotation
         _rigid.constraints = RigidbodyConstraints.FreezeAll;
+        _startingY = _trans.position.y;
+        _bottomY = _startingY - DownDist;
     }
 
     // Update is called once per frame
@@ -45,10 +47,9 @@ public class Plunger : MonoBehaviour, IController, INotify
         if (Input.GetKey(KeyCode.DownArrow))
         {
             _wasDown = true;
-            if(_traveled < DownDist)
+            if(_trans.position.y > _bottomY)
             {
                 _trans.Translate(0, -DistStep, 0, Space.World);
-                _traveled += DistStep;
             }
         }
         else if (_wasDown)
@@ -62,7 +63,10 @@ public class Plunger : MonoBehaviour, IController, INotify
             newSpring.damper = _spring.damper;
             newSpring.enableCollision = true;
             _wasDown = false;
-            _traveled = 0;
+        }
+        else if(_trans.position.y >= _startingY)
+        {
+            _rigid.constraints = RigidbodyConstraints.FreezeAll;
         }
     }
 
