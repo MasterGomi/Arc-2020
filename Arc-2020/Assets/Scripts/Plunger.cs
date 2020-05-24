@@ -84,4 +84,16 @@ public class Plunger : MonoBehaviour, IController, INotify
     {
         throw new System.NotImplementedException();
     }
+
+    //Stop the ball from bouncing on collision enter.
+    private void OnCollisionEnter(Collision collision)
+    {
+
+        GameObject ball = collision.collider.gameObject;
+        if (!ball.CompareTag("Ball")) return;
+        Rigidbody ballRigidBody = ball.GetComponent<Rigidbody>();
+
+        ballRigidBody.velocity = Vector3.zero;
+
+    }
 }
