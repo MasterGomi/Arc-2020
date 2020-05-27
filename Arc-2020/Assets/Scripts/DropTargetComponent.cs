@@ -20,6 +20,8 @@ public class DropTargetComponent : MonoBehaviour
     /// </summary>
     [SerializeField] int scoreValue;
 
+    private Vector3 currentScale;
+
 
     private void Start()
     {
@@ -27,6 +29,8 @@ public class DropTargetComponent : MonoBehaviour
         targetCollider = GetComponent<Collider>();
 
         TableManager.Manager.RegisterScores(this, scoreValue);
+
+        currentScale = transform.localScale;
 
         Active = true;
     }
@@ -57,7 +61,7 @@ public class DropTargetComponent : MonoBehaviour
         Active = false;
 
         targetCollider.enabled = false;
-        transform.localScale = new Vector3(0.4f, 0.02f, 0.4f);
+        transform.localScale = new Vector3(currentScale.x, 0.02f, currentScale.z);
 
         TableManager.Manager.Score(this);
 
@@ -83,7 +87,7 @@ public class DropTargetComponent : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
-        transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+        transform.localScale = currentScale;
 
         targetCollider.enabled = true;
 
