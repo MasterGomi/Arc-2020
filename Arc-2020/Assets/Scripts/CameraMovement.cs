@@ -4,18 +4,41 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using UnityEngine;
 
-public class CameraMovement : MonoBehaviour
+public class CameraMovement : MonoBehaviour, INotify
 {
-    public GameObject Ball;
     private Rigidbody rb;
+
+    private void Start()
+    {
+        TableManager.Manager.Subscribe(this);
+    }
 
     void Update()
     {
-        Ball = GameObject.FindWithTag("Ball");
-        rb = Ball.GetComponent<Rigidbody>();
-        if (rb.position.y > -0.8 && rb.position.y < 4.5)
+        if (ReferenceEquals(rb, null)) return;
+
+        if (rb.position.y > -0.8 && rb.position.y < 4.3)
         {
-            this.transform.position = new Vector3(0, rb.position.y, -13.74f);
+            transform.position = new Vector3(0, rb.position.y, -13.74f);
+        }
+    }
+
+    /// <summary>
+    /// Set ball for camera to track.
+    /// </summary>
+    /// <param name="ball">Ball GameObject to track</param>
+    public void FocusBall(GameObject ball)
+    {
+        if (!ball.CompareTag("Ball")) return;
+
+        rb = ball.GetComponent<Rigidbody>();
+    }
+
+    public void Notify(EventNotify notify)
+    {
+        if(notify == EventNotify.EndOfBall)
+        {
+            rb = null;
         }
     }
 }

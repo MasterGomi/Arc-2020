@@ -25,6 +25,7 @@ public class BallDispenser : MonoBehaviour, INotify
 
     private void Dispense()
     {
-        Instantiate(BallPrefab);
+        GameObject ball = Instantiate(BallPrefab);
+        TableManager.Manager.CameraScript.FocusBall(ball);
     }
 }

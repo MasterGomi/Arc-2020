@@ -18,10 +18,14 @@ public class Bouncer : MonoBehaviour
         if (!ball.CompareTag("Ball")) return;
 
         // Get a unit vector representing the normal of the collision
-        Vector3 normal = -collision.contacts[0].normal.normalized;
+        Vector3 normal = -collision.GetContact(0).normal.normalized;
+        if(Mathf.Abs(normal.y) > 0.95f)
+        {
+            //normal.y *= 3;
+        }
         Debug.Log(normal);
         // Add BounceForce in the direction of the normal
-        ball.GetComponent<Rigidbody>().AddForce(normal * BounceForce, ForceMode.Impulse);
+        ball.GetComponent<Rigidbody>().AddForce(normal * BounceForce, ForceMode.VelocityChange);
         // Score
         TableManager.Manager.Score(this);
     }
