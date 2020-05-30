@@ -27,10 +27,19 @@ public class TableManager : MonoBehaviour
     /// </summary>
     public int StartingBalls = 3;
     /// <summary>
+    /// A reference to the game camera. Used to find the camera controller script to tell it what ball to follow
+    /// </summary>
+    public Camera GameCamera;
+    /// <summary>
     /// Amount of balls remaining (read only)
     /// </summary>
     [HideInInspector]
     public int BallsRemaining { get; private set; }
+    /// <summary>
+    /// The game's camera's script
+    /// </summary>
+    [HideInInspector]
+    public CameraMovement CameraScript { get; private set; }
 
     private List<INotify> _subscribers = new List<INotify>();
 
@@ -41,7 +50,8 @@ public class TableManager : MonoBehaviour
         // Ensure there is only one TableManager for the game
         if (Manager != null) { Destroy(gameObject); return; }
         Manager = this;
-        BallsRemaining = StartingBalls;
+        BallsRemaining = StartingBalls - 1; // -1 becuase the first ball is automatically dispensed
+        CameraScript = GameCamera.GetComponent<CameraMovement>();
     }
 
 
@@ -62,6 +72,7 @@ public class TableManager : MonoBehaviour
     /// <param name="scoreType">The index to the score. Same order as when score was registed (starting at 0)</param>
     public void Score(Object scoreFrom, int scoreType = 0)
     {
+        Debug.Log("Scoring", scoreFrom);
         GameScore += ScoringTable[scoreFrom][scoreType];
     }
 
@@ -69,7 +80,7 @@ public class TableManager : MonoBehaviour
     {
         BallsRemaining--;
         EndOfBall();
-        if (BallsRemaining <= 0) GameOver();
+        if (BallsRemaining < 0) GameOver();
         else NotifyAll(EventNotify.NewBall);
     }
 
@@ -82,8 +93,8 @@ public class TableManager : MonoBehaviour
         // Activate relevant lights
         // Show relevant information
         // Start new ball
+        // Include stall for appropriate amount of time (especially to let sounds play out)
 
-        throw new System.NotImplementedException();
     }
 
     private void GameOver()

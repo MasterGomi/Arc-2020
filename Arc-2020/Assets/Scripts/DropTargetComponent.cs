@@ -20,6 +20,8 @@ public class DropTargetComponent : MonoBehaviour
     /// </summary>
     [SerializeField] int scoreValue;
 
+    private Vector3 currentScale;
+
 
     private void Start()
     {
@@ -27,6 +29,8 @@ public class DropTargetComponent : MonoBehaviour
         targetCollider = GetComponent<Collider>();
 
         TableManager.Manager.RegisterScores(this, scoreValue);
+
+        currentScale = transform.localScale;
 
         Active = true;
     }
@@ -37,6 +41,7 @@ public class DropTargetComponent : MonoBehaviour
     /// <param name="other">The other game object</param>
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Hit a Drop Target a");
         GameObject ball = other.gameObject;
         if (!ball.CompareTag("Ball")) return;
 
@@ -56,7 +61,7 @@ public class DropTargetComponent : MonoBehaviour
         Active = false;
 
         targetCollider.enabled = false;
-        transform.localScale = new Vector3(0.6f, 0.02f, 0.6f);
+        transform.localScale = new Vector3(currentScale.x, 0.02f, currentScale.z);
 
         TableManager.Manager.Score(this);
 
@@ -82,7 +87,7 @@ public class DropTargetComponent : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
-        transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
+        transform.localScale = currentScale;
 
         targetCollider.enabled = true;
 

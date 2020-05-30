@@ -1,26 +1,48 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Timers;
 using UnityEngine;
 
 public class Gate : MonoBehaviour, INotify
 {
-    public bool DefaultUp;
-    public List<GameObject> Controllers;
-    public float MovementAmount = 2.9f;
     /// <summary>
-    /// Vector used to alter gate's scale when lowered. In positive direction, based on local scale
+    /// Is the gate up at the start of the game?
     /// </summary>
-    public Vector3 Scaling = new Vector3(0, 0, 0.1f);
+    public bool DefaultUp = true;
+    /// <summary>
+    /// The list of objects that can control the state of this gate
+    /// </summary>
+    public List<GameObject> Controllers;
+    /// <summary>
+    /// What material should be used to represent the down position?
+    /// [The up position uses whatever material the object is currently using]
+    /// </summary>
+    public Material DownMaterial;
+    /// <summary>
+    /// When the gate is informed to raise, how long should it wait. (To let the ball escape)
+    /// </summary>
+    public float UpDelay;
+    /// <summary>
+    /// Dictates whether or not the gate resets to default position on a new ball
+    /// </summary>
+    public bool ResetOnNew = true;
 
     private bool _positionDown = false;
-    private Transform _trans;
+    private MeshRenderer _render;
+    private Material _upMaterial;
+    private MeshCollider _collider;
 
     // Start is called before the first frame update
     void Start()
     {
-        _trans = gameObject.transform;
+        // Initialise variables
+        _render = GetComponent<MeshRenderer>();
+        _upMaterial = _render.material;
+        _collider = GetComponent<MeshCollider>();
         // Lower the gate if that is its default position
         if (!DefaultUp) Lower();
+        // Subscribe to TableManager
+        TableManager.Manager.Subscribe(this);
         // Subscribe to the controllers, if possible
         foreach(GameObject obj in Controllers)
         {
@@ -43,9 +65,11 @@ public class Gate : MonoBehaviour, INotify
                 if (!_positionDown) Lower();
                 break;
             case EventNotify.GateUp:
-                if (_positionDown) Raise();
+                // Raise the gate after the appropriate amount of time
+                if (_positionDown) StartCoroutine(RaiseAfter(UpDelay));
                 break;
             case EventNotify.NewBall:
+                if (!ResetOnNew) return;
                 if (DefaultUp && _positionDown) Raise();
                 else if (!DefaultUp && !_positionDown) Lower();
                 break;
@@ -56,19 +80,23 @@ public class Gate : MonoBehaviour, INotify
     {
         if (_positionDown) return;
 
-        // Note: If translate isn't giving acceptable results, try disabling collider instead
-        _trans.Translate(0, 0, -MovementAmount);
-        _trans.localScale -= Scaling;
+        _collider.enabled = false;
+        _render.material = DownMaterial;
         _positionDown = true;
     }
 
-    private void Raise()
+    private void Raise(object source = null, ElapsedEventArgs e = null)
     {
         if (!_positionDown) return;
 
-        _trans.localScale += Scaling;
-        // Note: If translate isn't giving acceptable results, try disabling collider instead
-        _trans.Translate(0, 0, MovementAmount);
+        _collider.enabled = true;
+        _render.material = _upMaterial;
         _positionDown = false;
+    }
+
+    IEnumerator RaiseAfter(float time)
+    {
+        yield return new WaitForSeconds(time);
+        Raise();
     }
 }

@@ -4,10 +4,19 @@ using UnityEngine;
 
 public class Kickback : MonoBehaviour, IController
 {
+    /// <summary>
+    /// The magnitude of force to apply to the ball
+    /// </summary>
     public float KickbackForce;
-    public int KickbackDelay;
+    /// <summary>
+    /// The amount of time to hold the ball for (seconds)
+    /// </summary>
+    public float KickbackDelay;
 
-    private int _timer;
+    private float _timer;
+    private bool _waiting = false;
+    private Rigidbody _ballPhys;
+
     private List<INotify> _subscribers = new List<INotify>();
 
     private void Start()
@@ -15,23 +24,45 @@ public class Kickback : MonoBehaviour, IController
         _timer = KickbackDelay;
     }
 
-    private void OnTriggerStay(Collider other)
+    private void Update()
+    {
+        // Check if we actually need to do things here atm
+        if (!_waiting) return;
+
+        // If we're still waiting, update the timer appropriately
+        if (_timer > 0)
+        {
+            // Decrease the timer by the amount of time that has passed since the last update
+            _timer -= Time.deltaTime;
+            return;
+        }
+
+        // Otherwise, do the thing and reset appropriate members
+        FireBall();
+        _timer = KickbackDelay;
+        _waiting = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
     {
         GameObject ball = other.gameObject;
         if (!ball.CompareTag("Ball")) return;
-        Rigidbody ballPhysics = ball.GetComponent<Rigidbody>();
-        if (_timer == KickbackDelay) ballPhysics.constraints = RigidbodyConstraints.FreezeAll;
-        else if (_timer <= 0)
-        {
-            ballPhysics.constraints = RigidbodyConstraints.FreezePositionZ;
-            ball.GetComponent<Rigidbody>().AddForce(0, KickbackForce, 0, ForceMode.Impulse);
-            Notify(EventNotify.GateDown);
-        }
-        _timer--;
+
+        _ballPhys = ball.GetComponent<Rigidbody>();
+        // Remove the ball's velocity and freeze it in place
+        _ballPhys.velocity = Vector3.zero;
+        _ballPhys.angularVelocity = Vector3.zero;
+        _ballPhys.constraints = RigidbodyConstraints.FreezeAll;
+        _waiting = true;
     }
-    private void OnTriggerExit(Collider other)
+
+    private void FireBall()
     {
-        _timer = KickbackDelay;
+        // Restore the ball's original rigidbody constraints
+        _ballPhys.constraints = RigidbodyConstraints.FreezePositionZ;
+        _ballPhys.AddForce(0, KickbackForce, 0, ForceMode.Impulse);
+        // Notify subscriber (related kickback gate) to raise the gate
+        Notify(EventNotify.GateUp);
     }
 
     public void Subscribe(INotify subscriber)

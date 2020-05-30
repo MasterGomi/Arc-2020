@@ -8,10 +8,18 @@ public class Slingshot : MonoBehaviour
     /// The velocity multiplier on hitting a slingshot
     /// </summary>
     [SerializeField] float velocityMultiplier = 4;
+    public int Score;
+
+    private void Start()
+    {
+        if(Score > 0)
+        {
+            TableManager.Manager.RegisterScores(this, Score);
+        }
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
-
         GameObject ball = collision.collider.gameObject;
         if (!ball.CompareTag("Ball")) return;
 
@@ -21,5 +29,6 @@ public class Slingshot : MonoBehaviour
 
         ballRigidBody.velocity = direction * velocityMultiplier;
 
+        TableManager.Manager.Score(this);
     }
 }
