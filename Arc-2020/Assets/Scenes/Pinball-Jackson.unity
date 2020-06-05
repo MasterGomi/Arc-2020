@@ -2807,18 +2807,18 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 34
+    m_FontSize: 80
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 8
     m_MaxSize: 100
-    m_Alignment: 5
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Score: 0'
+  m_Text: "Score: \n0"
 --- !u!222 &769060773
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2841,11 +2841,11 @@ RectTransform:
   m_Father: {fileID: 586872915}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 673.6, y: 507.1}
-  m_SizeDelta: {x: 550.8279, y: 45.773453}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 10, y: -250}
+  m_SizeDelta: {x: 235, y: 300}
+  m_Pivot: {x: 0, y: 1}
 --- !u!1 &777660684
 GameObject:
   m_ObjectHideFlags: 0
@@ -3249,18 +3249,20 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 34
+    m_FontSize: 80
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 8
-    m_MaxSize: 100
-    m_Alignment: 3
+    m_MaxSize: 231
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Balls remaining: 0'
+  m_Text: 'Balls:
+
+    0'
 --- !u!222 &799828467
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3283,11 +3285,11 @@ RectTransform:
   m_Father: {fileID: 586872915}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -673.6, y: 507.1}
-  m_SizeDelta: {x: 550.8279, y: 45.773453}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 10, y: -560}
+  m_SizeDelta: {x: 235, y: 300}
+  m_Pivot: {x: 0, y: 1}
 --- !u!4 &815642681 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2596306659780918998, guid: 620e8897c6a350c4f989476337dcee10,
@@ -7043,7 +7045,7 @@ SpringJoint:
   m_ConnectedBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0.5, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 3.9396, y: -3.9829159, z: -0.59}
+  m_ConnectedAnchor: {x: 3.9396, y: 0.09708405, z: -0.59}
   serializedVersion: 2
   m_Spring: 75
   m_Damper: 1
