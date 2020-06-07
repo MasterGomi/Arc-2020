@@ -19,6 +19,7 @@ public class DropTargetComponent : MonoBehaviour
     /// The amount of points given when this drop target is hit.
     /// </summary>
     [SerializeField] int scoreValue;
+    public int ScoreValue { get { return scoreValue;  } }
 
 
     private void Start()

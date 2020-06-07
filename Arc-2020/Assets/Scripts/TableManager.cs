@@ -38,10 +38,19 @@ public class TableManager : MonoBehaviour
     // will exist for any objects to access in their start methods
     void Awake()
     {
+        Init();
+    }
+
+    /// <summary>
+    /// Forces initialization of the component (Needed for unit testing)
+    /// </summary>
+    public void Init()
+    {        
         // Ensure there is only one TableManager for the game
         if (Manager != null) { Destroy(gameObject); return; }
         Manager = this;
         BallsRemaining = StartingBalls;
+
     }
 
 
