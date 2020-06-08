@@ -14,6 +14,8 @@ public class DropTargetManager : MonoBehaviour
     /// </summary>
     [SerializeField] int bonusScoreValue;
 
+    public int BonusScoreValue { get { return bonusScoreValue; } }
+
     void Start()
     {
         dropTargets = GetComponentsInChildren<DropTargetComponent>();
